@@ -37,8 +37,8 @@ main = do
     Just canv <- getCanvasById "canv0"
     s <- newSeed
     let rw = randomWalk w s
-        ps = schL $  take 5000 rw
+        ps = schL $  take 10000 rw
         m = maximumBy (compare `on` magnitude) ps
-        f = map (* (700/m)) ps
+        f = map (* ((500/magnitude m):+0)) ps
     print m
     drawPath canv f
