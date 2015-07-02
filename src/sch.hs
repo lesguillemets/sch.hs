@@ -4,6 +4,8 @@ import Haste.Graphics.Canvas
 
 import Control.Applicative
 import Data.Complex
+import Data.List
+import Data.Function (on)
 
 sch :: Double -> Complex Double -> Complex Double
 sch α' z = let
@@ -27,8 +29,13 @@ randomWalk w = scanl (+) 1 . map ((*w ) . fromIntegral . subtract 1 . (*2))
     . randomRs (0, 1::Int)
 
 main = do
-    let w = 0.02 :: Double
+    let w = 2 :: Double
     Just canv <- getCanvasById "canv0"
-    ps <- schL . map (*0.90).  take 1000 . randomWalk w <$> newSeed
-    print ps
-    drawPath canv  ps
+    s <- newSeed
+    let ps = schL .  take 100 $ randomWalk w s
+        m = maximumBy (compare `on` magnitude) ps
+    print m
+    let
+        f = map (* (350/m)) ps
+    print f
+    drawPath canv f
