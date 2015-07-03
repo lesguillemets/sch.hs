@@ -23,7 +23,7 @@ schL = scanl (flip sch) (0:+0)
 
 drawPath :: Canvas -> [Complex Double] -> IO ()
 drawPath canv =
-    renderOnTop canv . translate (0,350) . stroke . path . map complexToPoint
+    renderOnTop canv . translate (500,350) . stroke . path . map complexToPoint
 
 complexToPoint :: Complex Double -> Point
 complexToPoint (x :+ y) = (x,y)
@@ -32,13 +32,17 @@ randomWalk :: Double -> Seed -> [Double]
 randomWalk w = scanl (+) 0 . map ((*w ) . fromIntegral . subtract 1 . (*2))
     . randomRs (0, 1::Int)
 
+randomTake :: Double -> Seed -> [Double]
+randomTake w = map ( (+0.5) . (*w) . fromIntegral . subtract 1 . (*2))
+    . randomRs (0, 1::Int)
+
 main = do
-    let w = 0.0002 :: Double
+    let w = 0.25 :: Double
     Just canv <- getCanvasById "canv0"
     s <- newSeed
-    let rw = randomWalk w s
-        ps = schL $  take 10000 rw
+    let rw = randomTake w s
+        ps = schL $  take 5000 rw
         m = maximumBy (compare `on` magnitude) ps
-        f = map (* ((500/magnitude m):+0)) ps
+        f = map (id) ps
     print m
     drawPath canv f
