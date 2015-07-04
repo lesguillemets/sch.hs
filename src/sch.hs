@@ -7,7 +7,6 @@ import Data.Complex
 import Data.List
 import Data.Function (on)
 
-
 sch :: Double -> Complex Double -> Complex Double
 sch α' z = let
     α = α' :+ 0
